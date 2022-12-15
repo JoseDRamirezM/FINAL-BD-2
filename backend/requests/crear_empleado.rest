@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/empleados/crear
+Content-Type: application/json
+
+{
+    "nombres": "Jose",
+    "apellidos": "Ramirez",
+    "fecha_contratacion": "2022-07-01",
+    "cargo": "TEST",
+    "salario": 10000,
+    "documento": "22222"
+}

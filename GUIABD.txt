@@ -1,0 +1,21 @@
+K key
+N attr
+F fecha
+Q telefono
+V precios
+
+/* TABLESPACES */
+
+adminprophorizotal.dbf
+adminprophorizotaltemp.dbf
+
+usuarioprophorizontal.dbf
+usuarioprophorizontaltemp.dbf
+
+
+/* USUARIOS */
+
+adminConjunto:adminConjunto
+responsable1:responsable1
+secretaria1:secretaria1
+contador1:contador1

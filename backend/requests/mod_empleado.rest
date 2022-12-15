@@ -1,0 +1,12 @@
+POST http://localhost:3001/api/empleados/modificar
+Content-Type: application/json
+
+{
+    "ID": 4,
+    "nombres": "test rest",
+    "apellidos": "rest test",
+    "fecha_contratacion": "2022-08-12",
+    "cargo": "TEST",
+    "salario": 10000,
+    "documento": "11111"
+}
