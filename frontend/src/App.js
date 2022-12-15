@@ -1,218 +1,304 @@
+import './App.css';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import empleadosService from './services/empleados';
-import Empleado from './components/Empleado';
-import EmpleadoForm from './components/EmpleadoForm';
-import EditarEmpleado from './components/EditarEmpleado';
+import RegistroPersona from './components/registoPersonas';
+import Principal from './components/Principal';
+import propiedadHorizontal from './services/propiedadHorizontal';
 
 const App = () => {
-    const [empleados, setEmpleados] = useState([]);
+    /**################# VARIABLES DE ESTADO ###########################*/
+    const [fechaHora, setFechaHora] = useState('');
 
-    /* Estado del form de agregar */
-    const [nuevoDocumento, setNuevoDocumento] = useState('');
-    const [nuevoNombres, setNuevoNombres] = useState('');
-    const [nuevoApellidos, setNuevoApellidos] = useState('');
-    const [nuevoFechaContratacion, setFechaContratacion] = useState('');
-    const [nuevoCargo, setNuevoCargo] = useState('');
-    const [nuevoSalario, setNuevoSalario] = useState('');
+    const listaTipoPersona = [
+        { id: 0, label: '' },
+        { id: 1, label: 'Responsable' },
+        { id: 2, label: 'Residente' },
+    ];
 
-    /* Manejadores de el estado del form para agregar un empleado */
-    const handleNuevoDocumento = (event) =>
-        setNuevoDocumento(event.target.value);
-    const handleNuevoNombres = (event) => setNuevoNombres(event.target.value);
-    const handleNuevoApellidos = (event) =>
-        setNuevoApellidos(event.target.value);
-    const handleNuevoFechaContratacion = (event) =>
-        setFechaContratacion(event.target.value);
-    const handleNuevoCargo = (event) => setNuevoCargo(event.target.value);
-    const handleNuevoSalario = (event) => setNuevoSalario(event.target.value);
-
-    /**
-     * Estado del form para editar un empleado
-     */
-
-    const [showEditar, setShowEditar] = useState(false);
-
-    const [editarID, setEditarID] = useState('');
-    const [editarDocumento, setEditarDocumento] = useState('');
-    const [editarNombres, setEditarNombres] = useState('');
-    const [editarApellidos, setEditarApellidos] = useState('');
-    const [editarFechaContratacion, setEditarFechaContratacion] = useState('');
-    const [editarCargo, setEditarCargo] = useState('');
-    const [editarSalario, setEditarSalario] = useState('');
-
-    /* Manejadores de el estado del form para editar un empleado */
-    const handleEditarDocumento = (event) =>
-        setEditarDocumento(event.target.value);
-    const handleEditarNombres = (event) => setEditarNombres(event.target.value);
-    const handleEditarApellidos = (event) =>
-        setEditarApellidos(event.target.value);
-    const handleEditarFechaContratacion = (event) =>
-        setEditarFechaContratacion(event.target.value);
-    const handleEditarCargo = (event) => setEditarCargo(event.target.value);
-    const handleEditarSalario = (event) => setEditarSalario(event.target.value);
-
-    /* Hook que obtiene todos los empleados cuando se 
-       carga la pagina
-    */
-    const hook = () => {
-        empleadosService.getAll().then((initEmpleados) => {
-            setEmpleados(initEmpleados);
-        });
+    const [tipoPersona, setTipoPersona] = useState('Responsable');
+    const handleTipoPersona = (event) => {
+        setTipoPersona(event.target.value);
+        console.log(tipoPersona);
     };
 
-    const toggleEditar = (empleado, fecha) => {
-        setShowEditar(true);
-        setEditarID(empleado.ID);
-        setEditarDocumento(empleado.DOCUMENTO);
-        setEditarNombres(empleado.NOMBRES);
-        setEditarApellidos(empleado.APELLIDOS);
-        setEditarFechaContratacion(fecha);
-        setEditarCargo(empleado.CARGO);
-        setEditarSalario(empleado.SALARIO);
+    const [tipoIdentificacion, setTipoIdentificacion] = useState('CC');
+    const handleTipoIdentificacion = async (event) => {
+        await setTipoIdentificacion(event.target.value);
+        console.log(tipoIdentificacion);
     };
 
-    /**
-     * Logica del frontend para agregar un usuario
-     * @param {} event
-     */
+    const listaTiposId = [
+        { id: 1, label: 'CC' },
+        { id: 2, label: 'T1' },
+        { id: 3, label: 'T2' },
+    ];
 
-    const addNewEmpleado = (event) => {
+    const [numIdentificacion, setNumIdentificacion] = useState('');
+    const handleNumIdentificacion = (event) => {
+        setNumIdentificacion(event.target.value);
+        console.log(numIdentificacion, 'xd');
+    };
+
+    const [nombreCompleto, setNombreCompleto] = useState('');
+    const handleNombreCompleto = (event) => {
+        setNombreCompleto(event.target.value);
+        console.log(nombreCompleto);
+    };
+
+    const [genero, setGenero] = useState('M');
+    const handleGenero = async (event) => {
+        await setGenero(event.target.value);
+        console.log(genero);
+    };
+
+    const listaGeneros = [
+        { id: 1, label: 'M' },
+        { id: 2, label: 'F' },
+        { id: 3, label: 'X' },
+    ];
+
+    const [fechaNacimiento, setFechaNacimiento] = useState('');
+    const handleFechaNacimiento = (event) => {
+        setFechaNacimiento(event.target.value);
+        console.log(fechaNacimiento);
+    };
+
+    const [fechaIngresoResidente, setFechaIngresoResidente] = useState('');
+    const handleFechaIngresoResidente = (event) => {
+        setFechaIngresoResidente(event.target.value);
+        setTelResidencia('');
+        setTelTrabajo('');
+        setCorreo('');
+        console.log(fechaIngresoResidente);
+    };
+
+    const [telResidencia, setTelResidencia] = useState('');
+    const handleTelResidencia = (event) => {
+        setTelResidencia(event.target.value);
+        console.log(telResidencia);
+        setFechaIngresoResidente('');
+    };
+
+    const [telTrabajo, setTelTrabajo] = useState('');
+    const handleTelTrabajo = (event) => {
+        setTelTrabajo(event.target.value);
+        console.log(telTrabajo);
+    };
+
+    const [correo, setCorreo] = useState('');
+    const handleCorreo = (event) => {
+        setCorreo(event.target.value);
+        console.log(correo);
+    };
+
+    /**################################################################*/
+
+    /**################# MANEJO SUBMIT FORM ###########################*/
+    const handleRegistrarPersona = (event) => {
         event.preventDefault();
+        console.log(
+            tipoPersona,
+            tipoIdentificacion,
+            numIdentificacion,
+            nombreCompleto,
+            genero,
+            fechaNacimiento,
+            fechaIngresoResidente,
+            telResidencia,
+            telTrabajo,
+            correo
+        );
+        // // Verificar que los campos no estén vacíos
         if (
-            nuevoDocumento &&
-            nuevoNombres &&
-            nuevoApellidos &&
-            nuevoFechaContratacion &&
-            nuevoCargo &&
-            nuevoSalario
+            tipoPersona &&
+            tipoPersona === 'Responsable' &&
+            tipoIdentificacion &&
+            numIdentificacion &&
+            nombreCompleto &&
+            genero &&
+            fechaNacimiento &&
+            telResidencia &&
+            telTrabajo &&
+            correo
         ) {
-            const check = empleados.filter(
-                (empleado) => empleado.DOCUMENTO === nuevoDocumento
-            );
-            if (check.length > 0) {
-                alert('duplicado');
-            } else {
-                const objetoNuevoEmpleado = {
-                    nombres: nuevoNombres,
-                    apellidos: nuevoApellidos,
-                    fecha_contratacion: nuevoFechaContratacion,
-                    cargo: nuevoCargo,
-                    salario: nuevoSalario,
-                    documento: nuevoDocumento,
-                };
-                console.log(objetoNuevoEmpleado);
-                empleadosService
-                    .create(objetoNuevoEmpleado)
-                    .then((newEmpleado) => {
-                        window.location.reload();
-                        console.log(newEmpleado);
-                    })
-                    .catch((error) => console.log(error.message));
-            }
+            const insertar_responsable = {
+                TIPOPERSONA: tipoPersona,
+                TIPOIDENTIFICACION: tipoIdentificacion,
+                NUMIDENTIFICACION: numIdentificacion,
+                NOMBRE: nombreCompleto,
+                GENERO: genero,
+                FECHANACIMIENTO: fechaNacimiento,
+                TELRESIDENCIA: telResidencia,
+                TELTRABAJO: telTrabajo,
+                CORREO: correo,
+            };
+
+            console.log(insertar_responsable);
+            propiedadHorizontal
+                .registrar_responsable(insertar_responsable)
+                .then((curso_ahora) => {
+                    console.log(curso_ahora, 'del backend');
+                })
+                .catch((error) => console.log(error.message));
         }
+
+        if (
+            tipoPersona &&
+            tipoPersona === 'Residente' &&
+            tipoIdentificacion &&
+            numIdentificacion &&
+            nombreCompleto &&
+            genero &&
+            fechaNacimiento &&
+            fechaIngresoResidente
+        ) {
+            const insertar_residente = {
+                TIPOPERSONA: tipoPersona,
+                TIPOIDENTIFICACION: tipoIdentificacion,
+                NUMIDENTIFICACION: numIdentificacion,
+                NOMBRE: nombreCompleto,
+                GENERO: genero,
+                FECHANACIMIENTO: fechaNacimiento,
+                FECHAINGRESO: fechaIngresoResidente,
+            };
+
+            console.log(insertar_residente);
+            propiedadHorizontal
+                .registrar_residente(insertar_residente)
+                .then((curso_ahora) => {
+                    console.log(curso_ahora, 'del backend');
+                })
+                .catch((error) => console.log(error.message));
+        }
+        //     // Objeto que tiene los datos necesarios para la consulta
+        //     // del curso del docente
+        //     const consulta_docente = {
+        //         NOMEMPLEADO: nombreDocente,
+        //         APELLEMPLEADO: apellidoDocente,
+        //         DIA: diaSemana,
+        //         SEDE: autorizado[0].SEDE,
+        //         HORA: hora,
+        //     };
+        //     console.log(consulta_docente);
+        //     // Llamar al manejador de la comunicación con el backend
+        //     // para que realice la consulta
+        //     unidadDeportivaService
+        //         .consulta_docente(consulta_docente)
+        //         .then((curso_ahora) => {
+        //             setInfoCurso(curso_ahora);
+        //             console.log(curso_ahora, 'del backend');
+        //         })
+        //         .catch((error) => console.log(error.message));
+
+        //     // Objeto que contiene los datos necesarios
+        //     // para consultar los elementos disponibles para
+        //     // préstamo
+
+        //     // Limpiar datos del formulario
+        //     setNombreDocente('');
+        //     setApellidoDocente('');
+        //}
     };
 
-    const editarEmpleado = (event) => {
-        event.preventDefault();
-        if (
-            editarDocumento &&
-            editarNombres &&
-            editarApellidos &&
-            editarFechaContratacion &&
-            editarCargo &&
-            editarSalario
-        ) {
-            const check = empleados.filter(
-                (empleado) => empleado.DOCUMENTO === editarDocumento
-            );
-            if (check.length > 0 && editarID !== check.pop().ID) {
-                alert('Ya existe un empleado con ese documento');
-            } else {
-                const empleadoActualizado = {
-                    ID: parseInt(editarID),
-                    nombres: editarNombres,
-                    apellidos: editarApellidos,
-                    fecha_contratacion: editarFechaContratacion,
-                    cargo: editarCargo,
-                    salario: parseInt(editarSalario),
-                    documento: editarDocumento,
-                };
-                empleadosService
-                    .update(empleadoActualizado)
-                    .then((actualizado) => {
-                        window.location.reload();
-                        console.log(actualizado);
-                    })
-                    .catch((error) => console.log(error.message));
-            }
-        }
-    };
+    /**################################################################*/
 
-    useEffect(hook, []);
+    /**################# HOOKS PARA DATOS ###########################*/
 
-    return (
-        <div>
-            <h1>Empleados</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Documento</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Fecha Contratacion</th>
-                        <th>Cargo</th>
-                        <th>Salario</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {empleados.map((empleado) => (
-                        <Empleado
-                            key={empleado.ID}
-                            empleado={empleado}
-                            toggleEditar={toggleEditar}
+    // Hook para actualzar fecha y hora
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setFechaHora(new Date().toLocaleString());
+        }, 1000);
+        return () => {
+            clearInterval(timer);
+        };
+    });
+
+    /**################################################################*/
+
+    // Funcion que presenta la interfaz
+    const renderAutorizado = () => {
+        return (
+            <div>
+                <Router>
+                    <div className="App">
+                        {/* Barra de navegación */}
+                        <Navbar bg="dark" variant="dark">
+                            <Container>
+                                <Navbar.Brand as={Link} to="/">
+                                    Propiedad Horizontal
+                                </Navbar.Brand>
+                                <Nav className="me-auto">
+                                    <Nav.Link as={Link} to="/registrarPersona">
+                                        Registrar persona
+                                    </Nav.Link>
+                                </Nav>
+                            </Container>
+                        </Navbar>
+                        <br />
+                    </div>
+
+                    {/* Se definen las rutas a las que el usuario tiene acceso y el componente
+                    que maneja esa funcionalidad, tener en cuenta que se verifica que el usuario
+                    esté autorizado para mostrar el componente de lo contrario redirecciona al login */}
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<Principal fechaHora={fechaHora} />}
                         />
-                    ))}
-                </tbody>
-            </table>
-            <hr></hr>
-            <h1>Agregar</h1>
-            <EmpleadoForm
-                addNuevoEmpleado={addNewEmpleado}
-                nuevoDocumento={nuevoDocumento}
-                nuevoNombres={nuevoNombres}
-                nuevoApellidos={nuevoApellidos}
-                nuevoFechaContratacion={nuevoFechaContratacion}
-                nuevoCargo={nuevoCargo}
-                nuevoSalario={nuevoSalario}
-                handleNuevoDocumento={handleNuevoDocumento}
-                handleNuevoNombres={handleNuevoNombres}
-                handleNuevoApellidos={handleNuevoApellidos}
-                handleNuevoFechaContratacion={handleNuevoFechaContratacion}
-                handleNuevoCargo={handleNuevoCargo}
-                handleNuevoSalario={handleNuevoSalario}
-            />
-            <hr></hr>
-            {showEditar && (
-                <EditarEmpleado
-                    editarEmpleado={editarEmpleado}
-                    editarDocumento={editarDocumento}
-                    editarNombres={editarNombres}
-                    editarApellidos={editarApellidos}
-                    editarFechaContratacion={editarFechaContratacion}
-                    editarCargo={editarCargo}
-                    editarSalario={editarSalario}
-                    handleEditarDocumento={handleEditarDocumento}
-                    handleEditarNombres={handleEditarNombres}
-                    handleEditarApellidos={handleEditarApellidos}
-                    handleEditarFechaContratacion={
-                        handleEditarFechaContratacion
-                    }
-                    handleEditarCargo={handleEditarCargo}
-                    handleEditarSalario={handleEditarSalario}
-                />
-            )}
-        </div>
-    );
+                        <Route
+                            path="/registrarPersona"
+                            element={
+                                <RegistroPersona
+                                    handleRegistrarPersona={
+                                        handleRegistrarPersona
+                                    }
+                                    numIdentificacion={numIdentificacion}
+                                    handleNumIdentificacion={
+                                        handleNumIdentificacion
+                                    }
+                                    tiposIdentificacion={tipoIdentificacion}
+                                    handleTipoIdentificacion={
+                                        handleTipoIdentificacion
+                                    }
+                                    listaTiposId={listaTiposId}
+                                    nombreCompleto={nombreCompleto}
+                                    handleNombreCompleto={handleNombreCompleto}
+                                    genero={genero}
+                                    handleGenero={handleGenero}
+                                    listaGeneros={listaGeneros}
+                                    fechaNacimiento={fechaNacimiento}
+                                    handleFechaNacimiento={
+                                        handleFechaNacimiento
+                                    }
+                                    listaTipoPersona={listaTipoPersona}
+                                    tipoPersona={tipoPersona}
+                                    handleTipoPersona={handleTipoPersona}
+                                    fechaIngresoResidente={
+                                        fechaIngresoResidente
+                                    }
+                                    handleFechaIngresoResidente={
+                                        handleFechaIngresoResidente
+                                    }
+                                    telResidencia={telResidencia}
+                                    handleTelResidencia={handleTelResidencia}
+                                    telTrabajo={telTrabajo}
+                                    handleTelTrabajo={handleTelTrabajo}
+                                    correo={correo}
+                                    handleCorreo={handleCorreo}
+                                />
+                            }
+                        />
+                    </Routes>
+                </Router>
+            </div>
+        );
+    };
+
+    return <div>{renderAutorizado()}</div>;
 };
 
 export default App;
